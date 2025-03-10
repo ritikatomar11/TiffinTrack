@@ -169,6 +169,7 @@ const deleteUser = asyncHandler(async(req , res)=>{
     {
         throw new ApiError(404 , "User is not authorized")
     }
+    await Address.findByIdAndDelete(req.user?.address); 
     await User.findByIdAndDelete(req.user?.id); 
     return res
     .status(200)
@@ -197,18 +198,24 @@ const addAddress = asyncHandler(async(req , res)=>{
     //create address
     //add in user document
     //send response 
+    
     const {street  , city , country , state, pincode }  = req.body ; 
-    const {id} = req.params; 
 
-    if([street , city , country , state , pincode , id].trim ===""){
+    if([street , city , country , state , pincode ].trim ===""){
         throw new ApiError(400 , "All fields are requried"); 
     }
     console.log(req.body); 
-    console.log(req.params);
-    
+
+    const user = await User.findById(req.user?._id)
+    if(!user){
+        throw new ApiError(400 , "User does not exist")
+    }
+    if(user?.address){
+        throw new ApiError(400 , "Address already exists")
+    }
 
     const address = await Address.create ({
-        street , city , country , state , pincode , user:id
+        street , city , country , state , pincode , user:req.user._id
     }); 
     console.log(address?._id)
 
@@ -303,6 +310,38 @@ const editAddress = asyncHandler(async(req , res)=>{
     )
 })
 
+const deleteAddress = asyncHandler(async(req , res)=>{
+    //get the user
+    const user = await User.findById (req.user?._id) ; 
+
+    if(!user){
+        throw new ApiError(400 , "User is not authorized"); 
+    }
+    if(user?.address === undefined){
+        throw new ApiError(400 , "Please first add Address")
+    }
+
+    //delete the address from its schema 
+    const addressId =user.address
+    await Address.findByIdAndDelete(addressId); 
+
+    await User.findByIdAndUpdate(
+        req.user._id , 
+        {
+            $unset:{address : ""}
+        } 
+    )
+    console.log(user?.address)
+    
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200 , {} ,"Address deleted successfully")
+    )
+
+    
+})
+
 //changePassword 
 const updateCurrentPassword = asyncHandler(async(req , res)=>{
 
@@ -337,6 +376,7 @@ const updateCurrentPassword = asyncHandler(async(req , res)=>{
 
 
 
+
 //validate email 
 
 const validateEmail = asyncHandler(async(req , res)=>{
@@ -358,5 +398,6 @@ export {registerUser ,
         updateCurrentPassword ,  
         getAddress ,
         editAddress ,
+        deleteAddress,
         
      }

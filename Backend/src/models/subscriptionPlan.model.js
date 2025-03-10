@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { Tiffin } from "./tiffin.model.js"
+// import { Tiffin } from "./tiffin.model.js"
 import { Staff } from "./staff.model.js"
 
 const subscriptionPlanSchema = new mongoose.Schema({
@@ -34,7 +34,8 @@ const subscriptionPlanSchema = new mongoose.Schema({
     ], 
     AddedBy:{
         type:mongoose.Schema.Types.ObjectId, 
-        ref:"Staff"
+        ref:"Staff",
+        required:true
     } , 
 
 })

@@ -12,7 +12,7 @@ const staffSchema = new mongoose.Schema(
         } , 
         staffType:{
             type:String , 
-            enum: ["admin" , "manager" , "cooking-staff" , "delivery"],
+            enum: ["admin" , "manager" , "cook" , "delivery" , "cleaner"],
             required:true
         } , 
         salary : {

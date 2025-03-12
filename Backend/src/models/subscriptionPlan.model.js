@@ -26,6 +26,10 @@ const subscriptionPlanSchema = new mongoose.Schema({
         type:Boolean ,
         default:true 
     }, 
+    planImage : {
+        type:String , 
+        required:true 
+    } , 
     tiffins:[
         {
             type:mongoose.Schema.Types.ObjectId , 

@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { User } from "../models/user.model.js"; 
 import { SubscriptionPlan } from "../models/subscriptionPlan.model.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js"
 
 
 //create new Subscriptionplan 
@@ -19,19 +20,35 @@ const newSubscriptionPlan = asyncHandler(async(req , res)=>{
     }
 
     const {name , description , planType ,price } = req.body; 
+    console.log(req.body)
 
-
-    if([name  ,description , planType , price ].some((field)=>field.trim==="")){
+    console.log(name , description  ,planType , price);
+    if([name  ,description , planType , price ].some((field)=>field.trim() === "")){
         throw new ApiError(400 , "All fields are required");
     }
+    
+    console.log(req.files)
+    const planImageLocalPath =  req.files?.planImage[0]?.path; 
 
+    if(!planImageLocalPath){
+        throw new ApiError(400 , "Plan file is required")
+    }
+    console.log(planImageLocalPath)
+    // upload the files to cloudinary
+    // const planImage = await uploadOnCloudinary(planImageLocalPath); 
+    // console.log(planImage)
+    // if(!planImage){
+    //     throw new ApiError(400 , "Error uploading  file to the cloudinary")
+    // }
 
     const newSubPlan = await SubscriptionPlan.create(
         {name , 
         description , 
         planType ,
         price , 
-        AddedBy : req.user._id }
+        AddedBy : req.user._id , 
+        planImage : planImageLocalPath 
+     }
     )
 
     if(!newSubPlan){
@@ -72,7 +89,6 @@ const subscriptionPlanDetails = asyncHandler(async(req , res)=>{
     .json(
         new ApiResponse(200 , plan , "Plan details are here")
     )
-
 })
 
 
@@ -94,6 +110,36 @@ const deleteSubscriptionPlan = asyncHandler(async(req , res)=>{
 
 //update subscription plan
 const editSubscriptionPlan = asyncHandler(async(req , res)=>{
+    const {id} = req.params; 
+    const plan = await SubscriptionPlan.findById(id); 
+    if(!plan){
+        throw new ApiError(404 , "The plan you are searching for is not there in db"); 
+    }
+
+    const updates = {...req.body}; 
+    // console.log(updates); 
+    
+    if(req.files){
+        updates.planImage = req.files.planImage[0].path; 
+    }
+    console.log(updates); 
+    
+    
+    const updatedPlan = await SubscriptionPlan.findByIdAndUpdate(
+        id ,
+        {
+            $set:updates
+        } , 
+        {
+            new:true 
+        }
+    )
+    
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200 , updatedPlan , "Plan is updated successfully")
+    )
 
 })
 export {

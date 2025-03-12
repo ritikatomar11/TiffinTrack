@@ -21,9 +21,11 @@ app.use(cookieParser())
 
 import userRouter from "./routes/user.routes.js"
 import subscriptionRouter from "./routes/subscription.routes.js"
+import tiffinRouter from "./routes/tiffin.routes.js"
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/subscription-plans" , subscriptionRouter)
+app.use("/api/v1/tiffins" , tiffinRouter)
 
 
 export { app }

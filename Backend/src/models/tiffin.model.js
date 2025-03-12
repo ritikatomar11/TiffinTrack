@@ -8,17 +8,15 @@ const tiffinSchema = new mongoose.Schema({
     } , 
     price : {
         type:Number , 
-        required:true 
+        required:true ,
+        min:1
+
     }
     , 
     description:{
         type:String , 
         required:true 
     } , 
-    TiffinImage :{
-        type:String ,
-        required:true
-    }, 
     foodType:{
         type:String  ,
         enum : ["VEG" , "NON_VEG", "VEGAN"] ,
@@ -27,6 +25,7 @@ const tiffinSchema = new mongoose.Schema({
     mealType:{
         type:[String] , 
         enum : ["LUNCH" , "DINNER"],
+        required:true
     },
     day: {
         type: String,
@@ -41,11 +40,14 @@ const tiffinSchema = new mongoose.Schema({
         ], // Replace with appropriate values from WeekDayAndTime if needed
         required: true,
       },
-
+      tiffinImage : {
+        type:String ,
+        required:true
+      },
 
     subscriptionPlan:{
         type:mongoose.Schema.Types.ObjectId , 
-        ref : "SubsriptionPlan"
+        ref : "SubscriptionPlan"
     }
 },{timestamps:true}
 )

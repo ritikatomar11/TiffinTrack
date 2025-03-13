@@ -25,7 +25,7 @@ import tiffinRouter from "./routes/tiffin.routes.js"
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/subscription-plans" , subscriptionRouter)
-app.use("/api/v1/tiffins" , tiffinRouter)
+app.use("/api/v1/subscription/:subscriptionId/tiffins" , tiffinRouter)
 
 
 export { app }

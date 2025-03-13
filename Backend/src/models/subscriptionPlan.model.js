@@ -22,6 +22,11 @@ const subscriptionPlanSchema = new mongoose.Schema({
         type:Number ,//price the user will pay according to planType
         required : true 
     } ,
+    foodType:{
+        type:String  ,
+        enum : ["VEG" , "NON_VEG", "VEGAN"] ,
+        required:true
+    },
     isAvailable : {
         type:Boolean ,
         default:true 

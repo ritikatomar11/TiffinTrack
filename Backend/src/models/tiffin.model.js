@@ -6,22 +6,11 @@ const tiffinSchema = new mongoose.Schema({
         required:true, 
         lowercase : true
     } , 
-    price : {
-        type:Number , 
-        required:true ,
-        min:1
-
-    }
-    , 
     description:{
         type:String , 
         required:true 
     } , 
-    foodType:{
-        type:String  ,
-        enum : ["VEG" , "NON_VEG", "VEGAN"] ,
-        required:true
-    },
+   
     mealType:{
         type:[String] , 
         enum : ["LUNCH" , "DINNER"],

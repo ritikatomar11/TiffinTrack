@@ -8,6 +8,7 @@ const staffSchema = new mongoose.Schema(
         },
         isAvailable : {
             type:Boolean ,
+            default:true
             
         } , 
         staffType:{

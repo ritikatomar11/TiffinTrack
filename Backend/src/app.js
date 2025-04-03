@@ -6,6 +6,12 @@ const app = express()
 
 //for now i am allowing any origin to access my backend
 app.use(cors({
+    origin: "http://localhost:5173", // Allow frontend URL
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true, // Allow cookies if needed
+  }));
+  
+app.use(cors({
     origin : process.env.CORS_ORIGIN,
     credentials : true 
 }))

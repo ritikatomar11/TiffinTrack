@@ -19,11 +19,11 @@ const newSubscriptionPlan = asyncHandler(async(req , res)=>{
         throw new ApiError(401 , "User is not logged In")
     }
 
-    const {name , description , planType ,price } = req.body; 
+    const {name , description , planType ,price,foodType } = req.body; 
     console.log(req.body)
 
-    console.log(name , description  ,planType , price);
-    if([name  ,description , planType , price ].some((field)=>field.trim() === "")){
+    console.log(name , description  ,planType , price , foodType);
+    if([name  ,description , planType , price , foodType].some((field)=>field.trim() === "")){
         throw new ApiError(400 , "All fields are required");
     }
     
@@ -45,6 +45,7 @@ const newSubscriptionPlan = asyncHandler(async(req , res)=>{
         {name , 
         description , 
         planType ,
+        foodType,
         price , 
         AddedBy : req.user._id , 
         planImage : planImageLocalPath 

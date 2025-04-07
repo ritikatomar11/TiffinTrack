@@ -1,8 +1,12 @@
-import { useState } from "react"
-import { useAuth } from "../AuthsContext.jsx"
+import { useEffect, useState } from "react"
+import {useDispatch , useSelector } from 'react-redux'
+import {selectLoggedInUser, signupAsync,selectSignupStatus, selectSignupError, clearSignupError, resetSignupStatus} from '../AuthSlice'
 
 function Signup(){
-    const {signup} = useAuth(); 
+    const dispatch = useDispatch()
+    const status = useSelector(selectSignupStatus)
+    const error = useSelector(selectSignupError)
+    const loggedInUser = useSelector(selectLoggedInUser)
     const [userData , setUserData] = useState({
         fullName:"" , 
         email:"" , 
@@ -14,116 +18,168 @@ function Signup(){
         staffType: "",
         salary: "",
     })
+    const reset = () => {
+      setUserData({
+        fullName: "", 
+        email: "", 
+        phoneNumber: "", 
+        password: "", 
+        role: "customer", 
+        joiningDate: "",
+        isAvailable: true,
+        staffType: "",
+        salary: "",
+      });
+    };
 
-    const [error , setError] = useState(null); 
-
-    const handleChange = (e)=>{
-        setUserData({...userData , [e.target.name] :e.target.value}); 
-    }
-
-    const handleSubmit  = async(e)=>{
-        e.preventDefault(); 
-        setError(null); 
-
-        if (!userData.role) {
-            setError("Please select a role before signing up.");
-            return;
-          }
-        try{
-            await  signup({
-                ...userData,
-                salary: userData.salary ? parseFloat(userData.salary) : 0, // Convert salary to number
-              });
-            alert("signup successful!"); 
-        }catch(err){
-            setError(err.message)
+    useEffect(()=>{
+        if(error){
+          alert(error.message)
         }
-    }
+      },[error])
+
+    useEffect(()=>{
+        if(status==='fullfilled'){
+          alert("Welcome! Verify your email to start shopping on mern-ecommerce.")
+          reset()
+        }
+        return ()=>{
+          dispatch(clearSignupError())
+          dispatch(resetSignupStatus())
+        }
+      },[status])
+
+
+      const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setUserData({
+          ...userData,
+          [name]: type === "checkbox" ? checked : value,
+        });
+      };
+      
+    
+    const handleSignup = (e)=>{
+        e.preventDefault()
+        dispatch(signupAsync(userData));
+        
+      }
+
+
     return (
+      <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6 border">
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Sign Up</h2>
+      <form onSubmit={handleSignup} className="space-y-4">
+        <input
+          type="text"
+          name="fullName"
+          placeholder="Full Name"
+          value={userData.fullName}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-2 border rounded-md"
+        />
+        <input
+          type="text"
+          name="email"
+          placeholder="Enter Email"
+          value={userData.email}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-2 border rounded-md"
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter password"
+          value={userData.password}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-2 border rounded-md"
+        />
+        <input
+          type="text"
+          name="phoneNumber"
+          placeholder="Enter Phone number"
+          value={userData.phoneNumber}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-2 border rounded-md"
+        />
         <div>
-            <h2>Signup</h2>
-            <form onSubmit={handleSubmit}>
-            <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Full Name"
-                    value={userData.fullName}
-                    onChange={handleChange}
-                    required
-            />
-            <input
-                    type="text"
-                    name="email"
-                    placeholder="Enter Email"
-                    value={userData.email}
-                    onChange={handleChange}
-                    required
-            />
-            <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter password"
-                    value={userData.password}
-                    onChange={handleChange}
-                    required
-            />
-            <input
-                    type="text"
-                    name="phoneNumber"
-                    placeholder="Enter Phone number"
-                    value={userData.phoneNumber}
-                    onChange={handleChange}
-                    required
-            />
-            <label>Role:</label>
-            <select name="role" value={userData.role} onChange={handleChange} required>
-                    <option value="customer">Customer</option>
-                    <option value="worker">Worker</option>
-            </select>
-            
-            {userData.role === "worker" && (
-                    <>
-                        <label>Joining Date:</label>
-                        <input
-                            type="date"
-                            name="joiningDate"
-                            value={userData.joiningDate}
-                            onChange={handleChange}
-                            required
-                        />
-                        
-                        <label>Staff Type:</label>
-                        <select name="staffType" value={userData.staffType} onChange={handleChange} required>
-                            <option value="">Select Staff Type</option>
-                            <option value="manager">Manager</option>
-                            <option value="chef">Chef</option>
-                            <option value="delivery">Delivery</option>
-                        </select>
-
-                        <label>Salary:</label>
-                        <input
-                            type="number"
-                            name="salary"
-                            placeholder="Salary"
-                            value={userData.salary}
-                            onChange={handleChange}
-                            required
-                        />
-
-                        <label>
-                            Available:
-                            <input
-                                type="checkbox"
-                                name="isAvailable"
-                                checked={userData.isAvailable}
-                                onChange={handleChange}
-                            />
-                        </label>
-                    </>
-            )}
-             <button type="submit">Signup</button>
-            </form>
+          <label className="block mb-1 text-gray-700">Role:</label>
+          <select
+            name="role"
+            value={userData.role}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-md"
+          >
+            <option value="customer">Customer</option>
+            <option value="worker">Worker</option>
+          </select>
         </div>
+
+        {userData.role === "worker" && (
+          <>
+            <div>
+              <label className="block mb-1 text-gray-700">Joining Date:</label>
+              <input
+                type="date"
+                name="joiningDate"
+                value={userData.joiningDate}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-gray-700">Staff Type:</label>
+              <select
+                name="staffType"
+                value={userData.staffType}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border rounded-md"
+              >
+                <option value="">Select Staff Type</option>
+                <option value="manager">Manager</option>
+                <option value="chef">Chef</option>
+                <option value="delivery">Delivery</option>
+              </select>
+            </div>
+            <div>
+              <label className="block mb-1 text-gray-700">Salary:</label>
+              <input
+                type="number"
+                name="salary"
+                placeholder="Salary"
+                value={userData.salary}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border rounded-md"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="isAvailable"
+                checked={userData.isAvailable}
+                onChange={handleChange}
+                className="w-4 h-4"
+              />
+              <label className="text-gray-700">Available</label>
+            </div>
+          </>
+        )}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
+        >
+          Signup
+        </button>
+      </form>
+    </div>
     )
 }
 

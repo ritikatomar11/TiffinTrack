@@ -1,8 +1,6 @@
 import Router from "express"
-import {registerUser, 
+import { 
         addAddress,
-        loginUser ,
-        logoutUser, 
         updateCurrentPassword , 
         deleteUser, 
         getUserDetails, 
@@ -13,16 +11,10 @@ import {registerUser,
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 const router = Router()
 
-
-router.route("/signUp").post(registerUser)
-router.route("/login").post(loginUser)
-
-//secured routes
-router.route("/logout").post(verifyJWT , logoutUser)
 router.route("/deleteUser").delete(verifyJWT , deleteUser)
 
 
-router.route("/getUserDetails").get(verifyJWT , getUserDetails)
+router.route("/getUserDetails/:id").get(verifyJWT , getUserDetails)
 
 //address routes
 router.route("/addAddress").post(verifyJWT , addAddress)

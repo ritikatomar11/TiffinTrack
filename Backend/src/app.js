@@ -25,10 +25,12 @@ app.use(express.static("public"))
 
 app.use(cookieParser())
 
+import authRouter from "./routes/auth.routes.js"
 import userRouter from "./routes/user.routes.js"
 import subscriptionRouter from "./routes/subscription.routes.js"
 import tiffinRouter from "./routes/tiffin.routes.js"
 
+app.use("/api/v1/auth" , authRouter)
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/subscription-plans" , subscriptionRouter)
 app.use("/api/v1/subscription/:subscriptionId/tiffins" , tiffinRouter)

@@ -1,15 +1,16 @@
-import { useAuth } from "../AuthsContext"
+import { useEffect } from "react";
+import { useDispatch , useSelector } from "react-redux";
+import { logoutAsync , selectLoggedInUser } from "../AuthSlice";
+import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-    const { logout } = useAuth();
-    
+    const dispatch = useDispatch(); 
+    const loggedInUser = useSelector(selectLoggedInUser); 
+    const navigate = useNavigate(); 
 
-    const handleLogout = async () => {
-        try {
-            await logout();
-        } catch (err) {
-            console.error("Logout failed", err);
-        }
+    const handleLogout =  (e) => {
+        e.preventDefault()    
+        dispatch(logoutAsync);      
     };
 
     return (

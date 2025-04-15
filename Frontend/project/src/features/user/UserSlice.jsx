@@ -9,9 +9,9 @@ const initialState = {
 }
 
 export const getUserDetailsAsync = createAsyncThunk('user/getUserDetails' , async(id)=>{
-    console.log(id)
+    // console.log(id)
     const userInfo = await getUserDetails(id); 
-    console.log("userInfo" , userInfo)
+    // console.log("userInfo" , userInfo)
     return userInfo
 })
 

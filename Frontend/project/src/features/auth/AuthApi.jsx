@@ -13,7 +13,7 @@ export const signup = async(userData) => {
 export const login = async(credentials) =>{
     try{
         const res = await axiosInstance.post("/auth/login" , credentials); 
-        console.log("Login Successful:", res.data); // Log API response instead of userData
+        // console.log("Login Successful:", res.data); // Log API response instead of userData
         return res.data; 
     }catch(error){
         console.error("Login Error:", error.response?.data || error.message);
@@ -44,7 +44,7 @@ export const checkAuth = async(cred)=>{
 
 export const deleteUser = async()=>{
     try{
-        const res = await axiosInstance.delete("/users/deleteUser"); 
+        // const res = await axiosInstance.delete("/users/deleteUser"); 
         return {success : true , message : "User Deleted"}
     }catch(error){
         console.error("Not able to delete User" , error) ; 

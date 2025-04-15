@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { User } from "../models/user.model.js"; 
 import { SubscriptionPlan } from "../models/subscriptionPlan.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { uploadOnCloudinary } from "../server.js"
 
 
 //create new Subscriptionplan 
@@ -35,11 +35,11 @@ const newSubscriptionPlan = asyncHandler(async(req , res)=>{
     }
     console.log(planImageLocalPath)
     // upload the files to cloudinary
-    // const planImage = await uploadOnCloudinary(planImageLocalPath); 
-    // console.log(planImage)
-    // if(!planImage){
-    //     throw new ApiError(400 , "Error uploading  file to the cloudinary")
-    // }
+    const planImage = await uploadOnCloudinary(planImageLocalPath); 
+    console.log(planImage)
+    if(!planImage){
+        throw new ApiError(400 , "Error uploading  file to the cloudinary")
+    }
 
     const newSubPlan = await SubscriptionPlan.create(
         {name , 
@@ -48,7 +48,7 @@ const newSubscriptionPlan = asyncHandler(async(req , res)=>{
         foodType,
         price , 
         AddedBy : req.user._id , 
-        planImage : planImageLocalPath 
+        planImage : planImage.url 
      }
     )
 
@@ -67,6 +67,11 @@ const newSubscriptionPlan = asyncHandler(async(req , res)=>{
 //get all subscription plans 
 const allSubscriptionPlan = asyncHandler(async(req , res)=>{
     const allPlans = await SubscriptionPlan.find() ;
+    console.log(allPlans)
+    if (allPlans.length === 0) {
+        throw new ApiError(404, "No subscription plans found");
+    }
+    
     if(!allPlans){
         throw new ApiError()
     }
@@ -84,6 +89,7 @@ const subscriptionPlanDetails = asyncHandler(async(req , res)=>{
     if(!plan){
         throw new ApiError(500 , "Not able to fetch subscription plan details")
     }
+    console.log(plan)
 
     return res
     .status(200)

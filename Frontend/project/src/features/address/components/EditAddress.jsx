@@ -1,18 +1,24 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify"
 import {
   selectLoggedInUser,
 } from "../../auth/AuthSlice";
+
 import {
   getAddressByIdAsync,
   selectAddress,
   updateAddressByIdAsync,
+  selectAddressUpdateStatus , 
+  selectAddressErrors
 } from "../AddressSlice";
 
 function EditAddress() {
   const dispatch = useDispatch();
+  const error = useSelector(selectAddressErrors)
   const loggedInUser = useSelector(selectLoggedInUser);
   const address = useSelector(selectAddress);
+  const status = useSelector(selectAddressUpdateStatus); 
 
   const [data, setData] = useState({
     street: "",
@@ -22,9 +28,13 @@ function EditAddress() {
     pincode: "",
   });
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
+  useEffect(()=>{
+    if(status === 'fulfilled'){
+      toast.success("Address updated successfully") ;
+    }else if(status === 'rejected'){
+      toast.error(error.message)
+    }
+  },[status , error])
 
   useEffect(() => {
     if (loggedInUser) {
@@ -38,6 +48,15 @@ function EditAddress() {
     }
   }, [address]);
 
+
+
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  
+
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!data.street || !data.city || !data.pincode) {
@@ -45,7 +64,6 @@ function EditAddress() {
       return;
     }
     dispatch(updateAddressByIdAsync({ userId: loggedInUser._id, address: data }))
-    alert("address updated"); 
   };
 
   return (

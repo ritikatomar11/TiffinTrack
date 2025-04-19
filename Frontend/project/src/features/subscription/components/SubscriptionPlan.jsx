@@ -2,9 +2,18 @@ import React , {useState , useEffect, useDebugValue} from "react"
 import {selectSubscriptionPlans} from "../SubscriptionSlice"
 import { useSelector , useDispatch} from "react-redux"
 import { fetchSubscriptionPlansAsync } from "../SubscriptionSlice"
+import { useNavigate } from "react-router-dom"; 
+
+
+
 export const SubscriptionPlan = ()=>{
     const plans = useSelector(selectSubscriptionPlans)
     const dispatch = useDispatch()
+    const navigate = useNavigate(); 
+
+    const handleClick = (id)=>{
+      navigate(`/${id}/tiffins`)
+    }
 
     useEffect(()=>{
         dispatch(fetchSubscriptionPlansAsync())
@@ -18,6 +27,7 @@ export const SubscriptionPlan = ()=>{
           {plans.map((plan) => (
             <div
               key={plan._id}
+              onClick= {()=>handleClick(plan._id)}
               className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               <img

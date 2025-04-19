@@ -176,9 +176,36 @@ const checkAuth = asyncHandler(async (req, res) => {
 
 })
 
+const forgotPassword = asyncHandler(async(req , res)=>{
+    const { email , newPassword} = req.body ; 
+    if (!email) {
+        throw new ApiError(500, "Enter valid email ");
+    }
+    console.log(email)
+    const user =await  User.findOne({email:email})
+    if (!user) {
+        throw new ApiError(500, "User with this email does not exist");
+    }
+    // console.log(user)
+    user.password = newPassword;
+    await user.save();
+
+    return res
+    .status (200)
+    .json(
+        new ApiResponse(200 , user , "Password is updated successfully")
+    )
+    
+
+
+
+    
+})
+
 export {
     registerUser,
     loginUser,
     logoutUser,
     checkAuth,
+    forgotPassword 
 }

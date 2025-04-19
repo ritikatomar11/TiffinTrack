@@ -5,8 +5,8 @@ export const signup = async(userData) => {
         const res = await axiosInstance.post("/auth/signUp"  ,userData); 
         return res.data ; 
     }catch(error){
-        console.error("Signup Error:", error.response?.data || error.message);
-        throw new Error(error.response?.data?.message ||"Signup failed")
+        console.error("Signup Error:", error || error.message);
+        throw error.response.data
     }
 }
 
@@ -39,6 +39,15 @@ export const checkAuth = async(cred)=>{
         return res.data 
     }catch(error){
         throw new Error(error.response?.data?.message ||"AuthCheck failed")
+    }
+}
+
+
+export const forgotPassword = async()=>{
+    try{
+        const res = await axiosInstance
+    }catch(error){
+
     }
 }
 

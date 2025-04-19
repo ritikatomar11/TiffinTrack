@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify"
 import {
   selectAddressErrors,
   selectAddressStatus,
@@ -21,6 +22,7 @@ function AddAddress() {
 
   useEffect(() => {
     if (status === "fulfilled") {
+      toast.success("Address added successfully")
       setAddress({
         street: "",
         city: "",
@@ -30,6 +32,11 @@ function AddAddress() {
       });
     }
   }, [status]);
+
+  useEffect(()=>{
+    toast.error(error.message)
+  } , [error])
+
 
   const handleChange = (e) => {
     setAddress({ ...address, [e.target.name]: e.target.value });

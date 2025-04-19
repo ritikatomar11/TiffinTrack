@@ -10,9 +10,15 @@ const Logout = () => {
 
     const handleLogout =  (e) => {
         e.preventDefault()    
-        dispatch(logoutAsync);      
+        dispatch(logoutAsync());      
     };
 
+    useEffect(() => {
+        if (!loggedInUser) {
+          navigate("/");
+        }
+      }, [loggedInUser, navigate]);
+      
     return (
         <button 
             onClick={handleLogout} 

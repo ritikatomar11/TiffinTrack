@@ -126,7 +126,8 @@ const editTiffin = asyncHandler(async(req , res)=>{
 
 //get all tiffins related to subscription plan - done
 const allTiffins = asyncHandler(async(req , res)=>{
-    const {subscriptionId} = req.query ; 
+    console.log(req.query , req.params , req.body)
+    const { subscriptionId } = req.query ; 
     if(!subscriptionId){
         throw new ApiError(400 , "Plan Id is required"); 
     }

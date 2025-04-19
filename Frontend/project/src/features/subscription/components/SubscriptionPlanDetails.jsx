@@ -28,8 +28,9 @@ export const SubscriptionPlanDetails = ()=>{
 
     return (
         <div>
+            {/* todo : add tiffin folder and work on details  */}
             {console.log("pd" , details)}
-            <p>{details?.foodType}</p>
+            <p key ={123}>{details?.tiffins}</p>
         </div>
     )
 }

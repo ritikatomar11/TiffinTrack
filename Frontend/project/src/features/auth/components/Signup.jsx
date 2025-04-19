@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react"
 import {useDispatch , useSelector } from 'react-redux'
 import {selectLoggedInUser, signupAsync,selectSignupStatus, selectSignupError, clearSignupError, resetSignupStatus} from '../AuthSlice'
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+
 
 function Signup(){
     const dispatch = useDispatch()
     const status = useSelector(selectSignupStatus)
     const error = useSelector(selectSignupError)
     const loggedInUser = useSelector(selectLoggedInUser)
+    const navigate = useNavigate(); 
     const [userData , setUserData] = useState({
         fullName:"" , 
         email:"" , 
@@ -32,22 +36,21 @@ function Signup(){
       });
     };
 
-    useEffect(()=>{
-        if(error){
-          alert(error.message)
-        }
-      },[error])
+    useEffect(() => {
+      if (status === "fulfilled") {
+        toast.success("Welcome!");
+        navigate("/login")
+      } else if (status === "rejected" && error) {
+        toast.error(error.message);
+      }
+    }, [status, error]);
 
-    useEffect(()=>{
-        if(status==='fullfilled'){
-          alert("Welcome! Verify your email to start shopping on mern-ecommerce.")
-          reset()
-        }
-        return ()=>{
-          dispatch(clearSignupError())
-          dispatch(resetSignupStatus())
-        }
-      },[status])
+    useEffect(() => {
+      return () => {
+        dispatch(clearSignupError());
+        dispatch(resetSignupStatus());
+      };
+    }, []);
 
 
       const handleChange = (e) => {

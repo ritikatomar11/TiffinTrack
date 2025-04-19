@@ -72,7 +72,7 @@ const authSlice = createSlice({
       })
       .addCase(signupAsync.rejected , (state , action)=>{
         state.signupStatus = 'rejected' 
-        state.signupError = action.error 
+        state.signupError = action.error?.message || "SignUp failed" 
       })
       .addCase(loginAsync.pending,(state)=>{
         state.loginStatus='pending'

@@ -11,6 +11,16 @@ export const fetchSubscriptionPlans = async()=>{
     }
 }
 
+export const addSubscriptionPlan = async(planDetails)=>{
+    try {
+        let res = await axiosInstance.post("/subscription-plans" , planDetails)
+        return res.data 
+    } catch (error) {
+        console.error("subscription Plan Error:", error.response?.data || error.message);
+        throw new Error(error.response?.data?.message ||" plans Addition Failed")   
+    }
+}
+
 export const fetchSubscriptionPlanDetails = async(id)=>{
     try{
         const res = await axiosInstance.get(`/subscription-plans/${id}`)

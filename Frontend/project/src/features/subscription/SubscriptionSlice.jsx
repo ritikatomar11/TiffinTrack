@@ -1,5 +1,5 @@
 import { createAsyncThunk  , createSlice } from "@reduxjs/toolkit";
-import {fetchSubscriptionPlans , fetchSubscriptionPlanDetails} from "./SubscriptionApi"
+import {fetchSubscriptionPlans , fetchSubscriptionPlanDetails  , addSubscriptionPlan} from "./SubscriptionApi"
 
 const initialState = {
     status : "idle" , 
@@ -11,6 +11,7 @@ const initialState = {
     plans : [] ,
     planDetailsFetchStatus: "idle",
     planDetails : null ,
+    newPlan : null,
     selectedPlan : null , 
     totalResults : 0 
 }
@@ -30,10 +31,28 @@ export const fetchSubscriptionPlanDetailsAsync = createAsyncThunk("subscription/
     return planDetail.data; 
 })
 
+
+export const addSubscriptionPlanAsync = createAsyncThunk("subscription/addSubscriptionPlanAsync" , async(planDetails)=>{
+    console.log(planDetails)
+    const res = await addSubscriptionPlan(planDetails); 
+    return res.data
+})
 const subscriptionSlice = createSlice({
     name:'subscriptionSlice' , 
     initialState:initialState , 
     reducers:{
+        resetStatus :(state , action)=>{
+            state.status = "idle"
+        } , 
+        cleanUpErrors : (state)=>{
+            state.errors = null 
+        }, 
+        cleanNewPlanDetails :(state)=>{
+            state.newPlan = null
+        },
+        resetPlanAddStatus : (state)=>{
+            state.planAddStatus = null 
+        } , 
 
     } , 
     extraReducers:(builder)=>{
@@ -62,6 +81,17 @@ const subscriptionSlice = createSlice({
             state.planDetailsFetchStatus = 'rejected'
             state.errors = action.error
         })
+        .addCase(addSubscriptionPlanAsync.pending,(state )=>{
+            state.planAddStatus = 'pending'
+        })
+        .addCase(addSubscriptionPlanAsync.fulfilled,(state , action)=>{
+            state.planAddStatus = 'fulfilled'
+            state.newPlan = action.payload
+        })
+        .addCase(addSubscriptionPlanAsync.rejected,(state , action)=>{
+            state.planAddStatus = 'rejected'
+            state.errors = action.error
+        })
 
 
     }
@@ -77,6 +107,9 @@ export const selectSubscriptionSuccessMessage = (state)=>state.SubscriptionSlice
 export const selectSubscriptionFetchStatus = (state)=>state.SubscriptionSlice.planFetchStatus
 export const selectSubscriptionPlanDetails = (state)=>state.SubscriptionSlice.planDetails
 export const selectSubscriptionPlanDetailsFetchStatus = (state)=>state.SubscriptionSlice.planDetailsFetchStatus
+
+export const selectSubscriptionPlanAddStatus = (state)=>state.SubscriptionSlice.planAddStatus
+export const selectNewPlan = (state)=>state.SubscriptionSlice.newPlan
 
 
 

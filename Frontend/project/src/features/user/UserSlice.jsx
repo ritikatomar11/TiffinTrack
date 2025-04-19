@@ -18,7 +18,15 @@ export const getUserDetailsAsync = createAsyncThunk('user/getUserDetails' , asyn
 const userSlice = createSlice({
     name:"userSlice" , 
     initialState:initialState, 
-    reducers:{} , 
+    reducers:{
+        cleanUpErrors : (state  , action)=>{
+            state.errors = null ;
+        } , 
+        resetStatus : (state)=>{
+            state.status = "idle"
+        } , 
+
+    } , 
     extraReducers:(builder)=>{
         builder
             .addCase(getUserDetailsAsync.pending , (state)=>{

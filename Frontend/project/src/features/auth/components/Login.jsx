@@ -1,6 +1,7 @@
 import { useState , useEffect } from "react";
 import {useDispatch , useSelector } from 'react-redux'
 import {selectLoggedInUser, loginAsync,selectLoginStatus, selectLoginError, clearLoginError, resetLoginStatus} from '../AuthSlice'
+import { useNavigate } from "react-router-dom";
 
 
 function Login(){
@@ -10,13 +11,15 @@ function Login(){
     const error = useSelector(selectLoginError)
     const status = useSelector(selectLoginStatus)
     const loggedInUser = useSelector(selectLoggedInUser)
+    const navigate = useNavigate()
+    const isLoading = status === 'pending'
 
      // handles user redirection
-    // useEffect(()=>{
-    //     if(loggedInUser){
-    //     navigate("/")
-    //     }
-    // },[loggedInUser])
+    useEffect(()=>{
+        if(loggedInUser){
+        navigate("/")
+        }
+    },[loggedInUser])
 
     useEffect(()=>{
         if(error){
@@ -81,9 +84,10 @@ function Login(){
 
             <button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
             >
-            Login
+             {isLoading ? 'Logging in...' : 'Login'}
             </button>
         </form>
         </div>

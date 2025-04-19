@@ -43,7 +43,11 @@ const addressSlice = createSlice({
         },
         resetAddressUpdateStatus : (state)=>{
             state.addressUpdateStatus="idle"
+        }, 
+        cleanUpErrors : (state)=>{
+            state.errors = null 
         }
+         
 
     },
     extraReducers:(builder)=>{
@@ -90,7 +94,7 @@ export const selectAddress  = (state)=>state.AddressSlice.address
 export const selectAddressErrors = (state)=>state.AddressSlice.errors 
 export const selectAddressSuccessMessge  = (state)=>state.AddressSlice.successMessage 
 export const selectAddressAddStatus = (state)=> state.AddressSlice.addressAddStatus
+export const selectAddressUpdateStatus = (state)=>state.AddressSlice.addressUpdateStatus
 
-
-export const { resetAddressStatus , resetAddressAddStatus , resetAddressDeleteStatus , resetAddressUpdateStatus} = addressSlice.actions
+export const { resetAddressStatus , resetAddressAddStatus , resetAddressDeleteStatus , resetAddressUpdateStatus , cleanUpErrors} = addressSlice.actions
 export default addressSlice.reducer

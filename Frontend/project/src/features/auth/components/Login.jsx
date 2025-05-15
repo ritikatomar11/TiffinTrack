@@ -2,6 +2,7 @@ import { useState , useEffect } from "react";
 import {useDispatch , useSelector } from 'react-redux'
 import {selectLoggedInUser, loginAsync,selectLoginStatus, selectLoginError, clearLoginError, resetLoginStatus} from '../AuthSlice'
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"
 
 
 function Login(){
@@ -17,21 +18,21 @@ function Login(){
      // handles user redirection
     useEffect(()=>{
         if(loggedInUser){
-        navigate("/")
+        navigate("/" ,{ replace: true })
         }
     },[loggedInUser])
 
     useEffect(()=>{
         if(error){
-          alert(error.message)
+          toast.error(error)
         }
       },[error])
 
 
       // handles login status and dispatches reset actions to relevant states in cleanup
     useEffect(()=>{
-        if(status==='fullfilled' && loggedInUser){
-            alert(`Login successful`)
+        if(status==='fulfilled' && loggedInUser){
+            toast.success(`Login successful`)
             // reset()
         }
         return ()=>{
@@ -89,6 +90,10 @@ function Login(){
             >
              {isLoading ? 'Logging in...' : 'Login'}
             </button>
+            
+            <div className="text-right text-sm text-blue-600 hover:underline cursor-pointer">
+            Forgot Password?
+            </div>
         </form>
         </div>
      </div>

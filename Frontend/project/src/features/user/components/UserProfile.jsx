@@ -3,6 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUserInfo } from "../UserSlice";
 import { useNavigate } from "react-router-dom";
 import { selectLoggedInUser } from "../../auth/AuthSlice";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Stack,
+  Divider,
+} from "@mui/material";
+import EditLocationAltIcon from "@mui/icons-material/EditLocationAlt";
+import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 export const UserProfile = () => {
   const navigate = useNavigate();
@@ -17,11 +29,18 @@ export const UserProfile = () => {
     }
   }, [loggedInUser, navigate]);
 
+  if (!userInfo?.data)
+    return (
+      <Typography align="center" sx={{ mt: 5, color: "gray" }}>
+        Loading user data...
+      </Typography>
+    );
+
   // useEffect(()=>{
   //   dispatch()
   // } , [errors])
 
-  if (!userInfo) return <p className="text-center mt-10 text-gray-600">Loading user data...</p>;
+
 
   const {
     fullName,
@@ -32,48 +51,67 @@ export const UserProfile = () => {
     staffType,
     joiningDate,
     address,
-  } = userInfo.data || {};
+  } = userInfo.data;
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-xl rounded-2xl">
-      <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">User Details</h1>
+     <Box maxWidth={600} mx="auto" mt={8}>
+      <Card elevation={6}>
+        <CardContent>
+          <Typography variant="h5" fontWeight={600} align="center" gutterBottom>
+            User Details
+          </Typography>
 
-      <div className="space-y-3 text-gray-700">
-        <p><span className="font-semibold">Name:</span> {fullName}</p>
-        <p><span className="font-semibold">Email:</span> {email}</p>
-        <p><span className="font-semibold">Phone:</span> {phoneNumber}</p>
-        <p><span className="font-semibold">Role:</span> {role}</p>
-        {salary && <p><span className="font-semibold">Salary:</span> ₹{salary}</p>}
-        {staffType && <p><span className="font-semibold">Staff Type:</span> {staffType}</p>}
-        {joiningDate && <p><span className="font-semibold">Joining Date:</span> {joiningDate}</p>}
-      </div>
+          <Divider sx={{ my: 2 }} />
 
-      <div className="mt-8 flex flex-col gap-4">
-        {address ? (
-          <button
-            onClick={() => navigate("/updateAddress")}
-            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl transition"
-          >
-            Edit Your Address
-          </button>
-        ) : (
-          <button
-            onClick={() => navigate("/addAddress")}
-            className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl transition"
-          >
-            Add Your Address
-          </button>
-        )}
+          <Stack spacing={1}>
+            <Typography><strong>Name:</strong> {fullName}</Typography>
+            <Typography><strong>Email:</strong> {email}</Typography>
+            <Typography><strong>Phone:</strong> {phoneNumber}</Typography>
+            <Typography><strong>Role:</strong> {role}</Typography>
+            {salary && <Typography><strong>Salary:</strong> ₹{salary}</Typography>}
+            {staffType && <Typography><strong>Staff Type:</strong> {staffType}</Typography>}
+            {joiningDate && (
+              <Typography>
+                <strong>Joining Date:</strong>{" "}
+                {new Date(joiningDate).toLocaleDateString()}
+              </Typography>
+            )}
+          </Stack>
 
-        {role === "worker" && ["manager", "admin"].includes(staffType) && (
-          <button
-            onClick={() => navigate("/newPlan")}
-            className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-xl transition"
-          >
-            Add Subscription Plan
-          </button>
-        )}
-      </div>
-    </div>
+          <Stack spacing={2} mt={4}>
+            {address ? (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<EditLocationAltIcon />}
+                onClick={() => navigate("/updateAddress")}
+              >
+                Edit Your Address
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<AddLocationAltIcon />}
+                onClick={() => navigate("/addAddress")}
+              >
+                Add Your Address
+              </Button>
+            )}
+
+            {role === "worker" && ["manager", "admin"].includes(staffType) && (
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={<AddBoxIcon />}
+                onClick={() => navigate("/newPlan")}
+              >
+                Add Subscription Plan
+              </Button>
+            )}
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };

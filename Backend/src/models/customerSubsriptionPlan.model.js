@@ -19,5 +19,11 @@ const customerSubscriptionPlanSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId , 
         ref:"SubscriptionPlan",
         required:true
+    } , 
+    order: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
     }
 } , {timestamps:true})
+
+export const CustomerSubscriptionPlan = mongoose.model("CustomerSubscriptionPlan" , customerSubscriptionPlanSchema); 

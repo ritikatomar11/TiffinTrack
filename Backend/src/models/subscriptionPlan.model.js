@@ -24,7 +24,7 @@ const subscriptionPlanSchema = new mongoose.Schema({
     } ,
     foodType:{
         type:String  ,
-        enum : ["VEG" , "NON_VEG", "VEGAN"] ,
+        enum : ["VEG" , "NON-VEG", "VEGAN"] ,
         required:true
     },
     isAvailable : {

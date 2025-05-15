@@ -51,7 +51,7 @@ const subscriptionSlice = createSlice({
             state.newPlan = null
         },
         resetPlanAddStatus : (state)=>{
-            state.planAddStatus = null 
+            state.planAddStatus = "idle" 
         } , 
 
     } , 
@@ -107,10 +107,9 @@ export const selectSubscriptionSuccessMessage = (state)=>state.SubscriptionSlice
 export const selectSubscriptionFetchStatus = (state)=>state.SubscriptionSlice.planFetchStatus
 export const selectSubscriptionPlanDetails = (state)=>state.SubscriptionSlice.planDetails
 export const selectSubscriptionPlanDetailsFetchStatus = (state)=>state.SubscriptionSlice.planDetailsFetchStatus
-
 export const selectSubscriptionPlanAddStatus = (state)=>state.SubscriptionSlice.planAddStatus
 export const selectNewPlan = (state)=>state.SubscriptionSlice.newPlan
 
-
+export const {resetStatus , cleanUpErrors , cleanNewPlanDetails , resetPlanAddStatus} = subscriptionSlice.actions ; 
 
 export default subscriptionSlice.reducer 

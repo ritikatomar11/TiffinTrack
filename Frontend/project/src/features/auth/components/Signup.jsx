@@ -39,9 +39,10 @@ function Signup(){
     useEffect(() => {
       if (status === "fulfilled") {
         toast.success("Welcome!");
+        reset();
         navigate("/login")
       } else if (status === "rejected" && error) {
-        toast.error(error.message);
+        toast.error(typeof error === "string" ? error : error?.message || "Signup failed");
       }
     }, [status, error]);
 
@@ -130,6 +131,7 @@ function Signup(){
               <input
                 type="date"
                 name="joiningDate"
+                max={new Date().toISOString().split("T")[0]}
                 value={userData.joiningDate}
                 onChange={handleChange}
                 required
@@ -177,9 +179,10 @@ function Signup(){
         )}
         <button
           type="submit"
+          disabled={status==="pending"}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
         >
-          Signup
+          {status === "pending" ? "Signing up..." : "Signup"}
         </button>
       </form>
     </div>

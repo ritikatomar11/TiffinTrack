@@ -10,8 +10,18 @@ import {
   selectAddress,
   updateAddressByIdAsync,
   selectAddressUpdateStatus , 
-  selectAddressErrors
+  selectAddressErrors , 
+  resetAddressUpdateStatus
 } from "../AddressSlice";
+
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  CircularProgress,
+} from "@mui/material";
 
 function EditAddress() {
   const dispatch = useDispatch();
@@ -31,6 +41,7 @@ function EditAddress() {
   useEffect(()=>{
     if(status === 'fulfilled'){
       toast.success("Address updated successfully") ;
+      dispatch(resetAddressUpdateStatus()); 
     }else if(status === 'rejected'){
       toast.error(error.message)
     }
@@ -60,73 +71,82 @@ function EditAddress() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!data.street || !data.city || !data.pincode) {
-      alert("Please fill in all required fields.");
+      toast.error("Please fill in all required fields.");
       return;
     }
     dispatch(updateAddressByIdAsync({ userId: loggedInUser._id, address: data }))
+    
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md space-y-4"
-    >
-      <h1 className="text-2xl font-semibold text-center text-gray-700 mb-4">
-        Update Address
-      </h1>
+    <Box maxWidth={500} mx="auto" mt={6}>
+      <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
+        <Typography variant="h5" align="center" fontWeight={600} gutterBottom>
+          Update Address
+        </Typography>
 
-      <input
-        type="text"
-        placeholder="Street"
-        name="street"
-        value={data.street}
-        onChange={handleChange}
-        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}
+        >
+          <TextField
+            name="street"
+            label="Street"
+            variant="outlined"
+            fullWidth
+            value={data.street}
+            onChange={handleChange}
+          />
+          <TextField
+            name="city"
+            label="City"
+            variant="outlined"
+            fullWidth
+            value={data.city}
+            onChange={handleChange}
+          />
+          <TextField
+            name="state"
+            label="State"
+            variant="outlined"
+            fullWidth
+            value={data.state}
+            onChange={handleChange}
+          />
+          <TextField
+            name="country"
+            label="Country"
+            variant="outlined"
+            fullWidth
+            value={data.country}
+            onChange={handleChange}
+          />
+          <TextField
+            name="pincode"
+            label="Pincode"
+            variant="outlined"
+            fullWidth
+            value={data.pincode}
+            onChange={handleChange}
+          />
 
-      <input
-        type="text"
-        placeholder="City"
-        name="city"
-        value={data.city}
-        onChange={handleChange}
-        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-
-      <input
-        type="text"
-        placeholder="State"
-        name="state"
-        value={data.state}
-        onChange={handleChange}
-        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-
-      <input
-        type="text"
-        placeholder="Country"
-        name="country"
-        value={data.country}
-        onChange={handleChange}
-        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-
-      <input
-        type="text"
-        placeholder="Pincode"
-        name="pincode"
-        value={data.pincode}
-        onChange={handleChange}
-        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
-      >
-        Submit
-      </button>
-    </form>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={status === "loading"}
+            sx={{ mt: 2 }}
+          >
+            {status === "loading" ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Update"
+            )}
+          </Button>
+        </Box>
+      </Paper>
+    </Box>
   );
 }
 

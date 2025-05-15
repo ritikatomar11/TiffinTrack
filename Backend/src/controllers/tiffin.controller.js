@@ -3,16 +3,17 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Tiffin } from "../models/tiffin.model.js";
 import { SubscriptionPlan } from "../models/subscriptionPlan.model.js";
+import { uploadOnCloudinary } from "../server.js"
 
 //create Tiffin -done
 const addNewTiffin = asyncHandler(async(req , res)=>{
     //get subscription plan id , take the info , check for empty fields , check the tiffinImage file , create the tiffin docs , return response
-    const {subscriptionId} = req.query ; 
+    const { subscriptionId } = req.query ; 
     console.log(req.params , req.body)
     if(!subscriptionId){
         throw new ApiError(400 , "plan Id is required")
     }
-    const {name , description , mealType , day }= req.body; 
+    const { name , description , mealType , day }= req.body; 
     console.log(name , description , mealType , day); 
 
     if([name , description , mealType , day].some((field)=> field.trim() === "")){
@@ -20,17 +21,25 @@ const addNewTiffin = asyncHandler(async(req , res)=>{
     }
 
     const tiffingImageLocalPath = req.files?.tiffinImage[0].path ; 
-
     if(!tiffingImageLocalPath){
-        throw new ApiError(400 , "Tiffin image is required"); 
+        throw new ApiError(400 , "Plan file is required")
+    }
+    console.log(tiffingImageLocalPath)
+    // upload the files to cloudinary
+    const tiffinImage = await uploadOnCloudinary(tiffingImageLocalPath); 
+    console.log(tiffinImage)
+    if(!tiffinImage){
+        throw new ApiError(400 , "Error uploading  file to the cloudinary")
     }
 
+
     const createdTiffin = await Tiffin.create(
-        {name , 
+        {
+        name , 
         description , 
         mealType , 
         day , 
-        tiffinImage: tiffingImageLocalPath , 
+        tiffinImage: tiffinImage.url , 
         subscriptionPlan : subscriptionId
     } 
     )

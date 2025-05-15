@@ -29,6 +29,10 @@ export const logoutAsync = createAsyncThunk("auth/logoutAsync",async()=>{
   return res
 })
 
+export const forgotPassword = createAsyncThunk("auth/forgotPasswordAsync" , async()=>{
+  const res = await forgotPassword
+})
+
 export const checkAuthAsync = createAsyncThunk("auth/checkAuthAsync" , async()=>{
   const res = await checkAuth()
   return res
@@ -68,7 +72,6 @@ const authSlice = createSlice({
       })
       .addCase(signupAsync.fulfilled , (state , action)=>{
         state.signupStatus = 'fulfilled' 
-        state.loggedInUser = action.payload
       })
       .addCase(signupAsync.rejected , (state , action)=>{
         state.signupStatus = 'rejected' 
@@ -78,19 +81,20 @@ const authSlice = createSlice({
         state.loginStatus='pending'
       })
       .addCase(loginAsync.fulfilled,(state,action)=>{
-          state.loginStatus='fullfilled'
+          state.loginStatus='fulfilled'
           state.loggedInUser=action.payload
       })
       .addCase(loginAsync.rejected,(state,action)=>{
           state.loginStatus='rejected'
-          state.loginError=action.error
+          state.loginError=action.error?.message ||"Login Failed"
       })
       .addCase(logoutAsync.pending,(state)=>{
         state.status='pending'
       })
       .addCase(logoutAsync.fulfilled,(state)=>{
-          state.status='fullfilled'
+          state.status='fulfilled'
           state.loggedInUser=null
+          state.errors = null 
       })
       .addCase(logoutAsync.rejected,(state,action)=>{
           state.status='rejected'
@@ -100,7 +104,7 @@ const authSlice = createSlice({
         state.status='pending'
     })
     .addCase(checkAuthAsync.fulfilled,(state,action)=>{
-        state.status='fullfilled'
+        state.status='fulfilled'
         state.loggedInUser=action.payload
         state.isAuthChecked=true
     })
@@ -126,6 +130,6 @@ export const selectLoginStatus = (state)=>state.AuthSlice.loginStatus
 export const selectLoginError = (state)=>state.AuthSlice.loginError
 
 
-export const { clearAuthSuccessMessage , clearAuthErrors , resetAuthStatus , clearSignupError , resetSignupStatus , clearLoginError , resetLoginStatus} = authSlice.actions
+export const { clearAuthSuccessMessage ,clearLoggedInUserDetails ,  clearAuthErrors , resetAuthStatus , clearSignupError , resetSignupStatus , clearLoginError , resetLoginStatus} = authSlice.actions
 export default authSlice.reducer 
 

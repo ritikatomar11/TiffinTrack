@@ -14,3 +14,18 @@ export const fetchAllTiffins = async(id)=>{
         throw error.response.data
     }
 }
+
+export const addNewTiffin  = async (tiffinDetails , id)=>{
+    try {
+        console.log("tiffinDetails", tiffinDetails )
+        console.log("id" , id)
+        const res = await axiosInstance.post(`/subscription/tiffins` , tiffinDetails  , {
+            params : {
+                subscriptionId : id
+            }
+        })
+    } catch (error) {
+        console.error("Not able to add new tiffin details:", error || error.message);
+        throw error.response.data
+    }
+}

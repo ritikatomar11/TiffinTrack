@@ -10,10 +10,10 @@ const orderSchema = new mongoose.Schema ({
         type:Date , 
         default:Date.now ,
     } ,
-    payment:{
-        type:mongoose.Schema.Types.ObjectId , 
-        ref:"Payment"
-    } , 
+    // payment:{
+    //     type:mongoose.Schema.Types.ObjectId , 
+    //     ref:"Payment"
+    // } , 
     customer : {
         type:mongoose.Schema.Types.ObjectId , 
         ref:"User"  ,
@@ -24,7 +24,13 @@ const orderSchema = new mongoose.Schema ({
         type:mongoose.Schema.Types.ObjectId , 
         ref : "SubscriptionPlan"
 
+    } , 
+    status : {
+        type: String,
+        enum: ["Pending", "Completed", "Canceled"],
+        default: "Pending",
     }
+
 
 } , {timestamps:true}); 
 

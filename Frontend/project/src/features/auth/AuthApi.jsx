@@ -45,7 +45,7 @@ export const checkAuth = async(cred)=>{
 
 export const forgotPassword = async()=>{
     try{
-        const res = await axiosInstance
+        const res = await axiosInstance.get("")
     }catch(error){
 
     }

@@ -26,3 +26,12 @@ export const updateAddressById = async(address)=>{
         throw error.response.data
     }
 }
+
+export const deleteAddress = async()=>{
+    try{
+        const res = await axiosInstance.delete("/address/deleteAddress")
+        return res.data
+    }catch(error){
+        throw error.response.data 
+    }
+}

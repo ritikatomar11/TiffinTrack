@@ -1,47 +1,85 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
 import { selectLoggedInUser } from "../../auth/AuthSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { AppBar, Toolbar, Typography, IconButton, Button, Drawer, List, ListItem, ListItemButton, ListItemText, Box } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const Navbar = () => {
-  const dispatch  = useDispatch(); 
-  const loggedInUser = useSelector(selectLoggedInUser); 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const loggedInUser = useSelector(selectLoggedInUser);
+  
+   const toggleDrawer = () => {
+    setDrawerOpen((prev) => !prev);
+  };
+
+    const menuItems = loggedInUser
+    ? [
+        { label: "User Details", path: "/profile" },
+        { label: "Logout", path: "/logout" },
+      ]
+    : [
+        { label: "Login", path: "/login" },
+        { label: "Sign Up", path: "/signup" },
+      ];
 
   return (
-    <nav className="bg-white shadow-md p-4 flex justify-between items-center">
-      <Link to="/" className="text-2xl font-bold text-textDark">
-        TiffinTrack 
-      </Link>
+     <>
+      <AppBar position="sticky" sx={{ bgcolor: "white", color: "black" }}>
+        <Toolbar>
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{ flexGrow: 1, textDecoration: "none", color: "green", fontWeight: "bold" }}
+          >
+            TiffinTrack
+          </Typography>
 
+          {/* Desktop Menu */}
+          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+            {menuItems.map((item) => (
+              <Button
+                key={item.label}
+                component={Link}
+                to={item.path}
+                variant={item.label === "Logout" || item.label === "Sign Up" ? "contained" : "outlined"}
+                color="success"
+              >
+                {item.label}
+              </Button>
+            ))}
+          </Box>
 
-     {loggedInUser ? <div className="flex space-x-4">
-        <Link
-          to="/profile"
-          className="px-4 py-2 border rounded-xl border-textDark text-green-600 rounded- hover:bg-green-50 transition"
-        >
-          User Details
-        </Link>
-        <Link
-          to="/logout"
-          className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
-        >
-          Logout
-        </Link>
-      </div> :  
-      <div className="flex space-x-4">
-        <Link
-          to="/login"
-          className="px-4 py-2 border rounded-xl border-textDark text-green-600 rounded- hover:bg-green-50 transition"
-        >
-          Login
-        </Link>
-        <Link
-          to="/signup"
-          className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition"
-        >
-          Sign Up
-        </Link>
-      </div>}
-    </nav>
+          {/* Mobile Menu Button */}
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            onClick={toggleDrawer}
+            sx={{ display: { xs: "block", md: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* Mobile Drawer */}
+      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
+        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer}>
+          <List>
+            {menuItems.map((item) => (
+              <ListItem key={item.label} disablePadding>
+                <ListItemButton component={Link} to={item.path}>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
+    </>
   );
 };
 

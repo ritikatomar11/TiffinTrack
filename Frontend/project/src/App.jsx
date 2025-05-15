@@ -15,7 +15,9 @@ import EditAddress from "./features/address/components/EditAddress";
 import { SubscriptionPlanDetails } from "./features/subscription/components/SubscriptionPlanDetails";
 import FetchAllTiffins from "./features/tiffin/components/FetchAllTiffins";
 import AddSubscriptionPlan from "./features/subscription/components/AddSubscriptionPlan";
-
+import AddTiffin from "./features/tiffin/components/AddTiffin";
+import { AddOrder } from "./features/order/components/AddOrder";
+import { SubscriptionPlanPage } from "./pages/SubscriptionPlanPage";
 function App() {
   
   const isAuthChecked = useSelector(selectIsAuthChecked)
@@ -27,6 +29,7 @@ function App() {
   const routes = createBrowserRouter(
     createRoutesFromElements(
       <>
+        <Route path='/allPlans' element={<SubscriptionPlanPage/>}/>
         <Route path='/signup' element={<SignupPage/>}/>
         <Route path="/login" element={<LoginPage/>}/>
         <Route path='/logout' element={<Protected><Logout/></Protected>}/>
@@ -34,11 +37,15 @@ function App() {
         <Route path='/updateAddress' element={<Protected><EditAddress/></Protected>}/>
         <Route path="/profile" element={<Protected><UserProfilePage/></Protected>}/>
         <Route path='/' element={<HomePage/>}/>
-        <Route path='/:id' element ={<SubscriptionPlanDetails/>}>
-          
+        <Route path='/:id'>
+          <Route path='tiffins' element={<FetchAllTiffins/>}/> 
+          <Route path='addOrder' element= {<AddOrder/>}/> 
+          <Route path='addNewTiffin' element={<AddTiffin/>}/>
+            
         </Route>
-        <Route path='/:id/tiffins' element={<FetchAllTiffins/>}/>
         <Route path='/newPlan' element={<AddSubscriptionPlan/>}/>
+               
+        
 
       </>
     )

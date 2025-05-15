@@ -57,7 +57,7 @@ const uploadOnCloudinary = async(localFilePath)=>{
         console.log("not able to upload" , error)
         if(fs.existsSync(localFilePath)){
             fs.unlinkSync(localFilePath);
-            console.log("local fiel deleted due to failed upload")
+            console.log("local file deleted due to failed upload")
         }
         return null ; 
     }

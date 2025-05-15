@@ -36,12 +36,14 @@ import userRouter from "./routes/user.routes.js"
 import addressRouter from "./routes/address.routes.js"
 import subscriptionRouter from "./routes/subscription.routes.js"
 import tiffinRouter from "./routes/tiffin.routes.js"
+import orderRouter from "./routes/order.routes.js"
 
 app.use("/api/v1/address" , addressRouter)
 app.use("/api/v1/auth" , authRouter)
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/subscription-plans" , subscriptionRouter)
 app.use("/api/v1/subscription/tiffins" , tiffinRouter)
+app.use("/api/v1/order" , orderRouter)
 
 
 export { app }

@@ -48,7 +48,7 @@ const newSubscriptionPlan = asyncHandler(async(req , res)=>{
         foodType,
         price , 
         AddedBy : req.user._id , 
-        planImage : planImage.url 
+        planImage : planImage?.url 
      }
     )
 

@@ -1,5 +1,5 @@
 import {createSlice , createAsyncThunk} from "@reduxjs/toolkit"; 
-import { addAddress , getAddressById, updateAddressById} from "./AddressApi";
+import { addAddress , getAddressById, updateAddressById , deleteAddress} from "./AddressApi";
 
 const initialState = {
     status : "idle" , 
@@ -27,6 +27,10 @@ export const updateAddressByIdAsync = createAsyncThunk("address/updateAddressByI
     return updatedAddress
 })
 
+export const deleteAddressAsync = createAsyncThunk("address/deleteAddressAsync" , async()=>{
+    const deletedAddress = await deleteAddress() ;
+    return deletedAddress; 
+})
 
 const addressSlice = createSlice({
     name:"addressSlice" , 
@@ -85,6 +89,17 @@ const addressSlice = createSlice({
             state.addressUpdateStatus='rejected'
             state.errors=action.error
         })
+        .addCase(deleteAddressAsync.pending,(state)=>{
+            state.addressDeleteStatus='pending'
+        })
+        .addCase(deleteAddressAsync.fulfilled,(state,action)=>{
+            state.addressDeleteStatus='fulfilled'
+            state.address = null ; 
+        })
+        .addCase(deleteAddressAsync.rejected,(state,action)=>{
+            state.addressDeleteStatus='rejected'
+            state.errors=action.error
+        })
     }
 })
 
@@ -95,6 +110,6 @@ export const selectAddressErrors = (state)=>state.AddressSlice.errors
 export const selectAddressSuccessMessge  = (state)=>state.AddressSlice.successMessage 
 export const selectAddressAddStatus = (state)=> state.AddressSlice.addressAddStatus
 export const selectAddressUpdateStatus = (state)=>state.AddressSlice.addressUpdateStatus
-
+export const selectAddressDeleteStatus = (state)=>state.AddressSlice.addressDeleteStatus
 export const { resetAddressStatus , resetAddressAddStatus , resetAddressDeleteStatus , resetAddressUpdateStatus , cleanUpErrors} = addressSlice.actions
 export default addressSlice.reducer

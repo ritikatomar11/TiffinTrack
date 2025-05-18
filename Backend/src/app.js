@@ -22,6 +22,8 @@ app.use(cors({
     credentials : true 
 }))
 
+
+
 //middleware for parsing json data  and setting the limit 
 app.use(express.json({limit:"16kb"}))
 
@@ -44,6 +46,11 @@ app.use("/api/v1/users", userRouter)
 app.use("/api/v1/subscription-plans" , subscriptionRouter)
 app.use("/api/v1/subscription/tiffins" , tiffinRouter)
 app.use("/api/v1/order" , orderRouter)
+
+app.get('/', (req, res) => {
+  res.send({ message: 'API is running' });
+});
+
 
 
 export { app }

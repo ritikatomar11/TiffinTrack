@@ -18,6 +18,8 @@ const Navbar = () => {
     ? [
         { label: "User Details", path: "/profile" },
         { label: "Logout", path: "/logout" },
+        {label : "My Orders" , path:"/myOrders"}
+
       ]
     : [
         { label: "Login", path: "/login" },

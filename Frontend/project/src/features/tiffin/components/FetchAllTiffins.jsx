@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect , useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -10,6 +10,16 @@ import {
   resetStatus,
   cleanUpErrors,
 } from "../TiffinSlice";
+import {
+  Box,
+  Typography,
+  Button,
+  Paper,
+  Stack,
+} from "@mui/material";
+
+import { selectLoggedInUser } from "../../auth/AuthSlice";
+import { getAddressByIdAsync , selectAddress} from "../../address/AddressSlice";
 
 function FetchAllTiffins() {
   const { id } = useParams();
@@ -18,47 +28,87 @@ function FetchAllTiffins() {
   const tiffins = useSelector(selectTiffins);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loggedInUser = useSelector(selectLoggedInUser);
+  const address = useSelector(selectAddress) ;
+
+  const [addressData , setAddressData ] = useState({
+    street: "",
+    city: "",
+    state: "",
+    country: "",
+    pincode: "",
+  })
 
   useEffect(() => {
     dispatch(fetchAllTiffinsAsync(id));
-  }, [id, dispatch]);
+  }, [id]);
+
+  
+  useEffect(() => {
+    if (loggedInUser) {
+     console.log("l" , loggedInUser);
+      dispatch(getAddressByIdAsync(loggedInUser._id));
+       console.log("a" , address); 
+    }
+  }, [loggedInUser, dispatch]);
+
+   useEffect(() => {
+    if (address?.data?.address) {
+      setAddressData(address.data.address);
+    }
+  }, [address]);
 
   useEffect(() => {
     if (status === "fulfilled") {
       toast.success("Fetched all tiffins under this subscription plan");
+      dispatch(resetStatus());
     } else if (status === "rejected") {
       toast.error(error?.message || "Something went wrong");
+      dispatch(cleanUpErrors());
     }
   }, [status, error]);
 
-  useEffect(() => {
-    return () => {
-      dispatch(resetStatus());
-      dispatch(cleanUpErrors());
-    };
-  }, [dispatch]);
+ 
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Tiffin Plans</h2>
-        <div className="space-x-4">
-          <button
-            onClick={() => navigate(`/${id}/addNewTiffin`)}
-            className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-xl transition"
-          >
-            Add New Tiffin
-          </button>
-          <button
-            onClick={() => navigate(`/${id}/addOrder`)}
-            className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl transition"
-          >
-            Place Order
-          </button>
-        </div>
-      </div>
+      
 
-      {status === "loading" ? (
+
+      <Box p={4}>
+      {/* Greeting and Address */}
+      {(loggedInUser? <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Hello, {loggedInUser?.data?.fullName}
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Delivery Address: {`${addressData.street}, ${addressData.city}, ${addressData.state} - ${addressData.pincode}`}
+        </Typography>
+        {/* Buttons */}
+      <Stack direction="row" spacing={2} justifyContent="center" mt={6}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate(`/${id}/addNewTiffin`)}
+        >
+          Add New Tiffin
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => navigate(`/${id}/addOrder`)}
+        >
+          Place Order
+        </Button>
+      </Stack>
+      </Paper>: "" )}
+
+      {/* Heading */}
+      <Typography variant="h4" gutterBottom textAlign="center" fontWeight="bold">
+        Tiffin Plans
+      </Typography>
+
+       {status === "loading" ? (
         <div className="text-center text-lg text-gray-500 animate-pulse">Loading tiffins...</div>
       ) : tiffins.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -87,7 +137,15 @@ function FetchAllTiffins() {
         <div className="text-center text-lg text-gray-500 mt-10">
           No tiffins found for this plan.
         </div>
-      )}
+      )} 
+
+
+
+      
+    </Box>
+
+
+     
     </div>
   );
 }

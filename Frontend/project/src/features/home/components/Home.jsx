@@ -1,4 +1,6 @@
 import { Box, Typography, Button, Grid, Card, CardContent } from "@mui/material";
+import {selectLoggedInUser} from "../../auth/AuthSlice"; 
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import ScheduleIcon from '@mui/icons-material/Schedule';
@@ -24,6 +26,7 @@ const features = [
 
 
 export const Home = () => {
+  const loggedInUser = useSelector(selectLoggedInUser); 
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
     
@@ -56,6 +59,7 @@ export const Home = () => {
           Enjoy fresh, homemade, and healthy meals crafted with love and delivered right to your doorstep. Perfect for students, professionals, and families.
         </Typography>
         <Box mt={4}>
+          {(loggedInUser) ? "" : 
           <Button
             variant="contained"
             color="primary"
@@ -64,7 +68,7 @@ export const Home = () => {
             sx={{ mx: 1 }}
           >
             Get Started
-          </Button>
+          </Button>}
           <Button
             variant="outlined"
             color="success"

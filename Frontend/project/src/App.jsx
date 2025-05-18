@@ -18,6 +18,7 @@ import AddSubscriptionPlan from "./features/subscription/components/AddSubscript
 import AddTiffin from "./features/tiffin/components/AddTiffin";
 import { AddOrder } from "./features/order/components/AddOrder";
 import { SubscriptionPlanPage } from "./pages/SubscriptionPlanPage";
+import { OrdersByUser } from "./features/order/components/OrdersByUser";
 function App() {
   
   const isAuthChecked = useSelector(selectIsAuthChecked)
@@ -32,6 +33,7 @@ function App() {
         <Route path='/allPlans' element={<SubscriptionPlanPage/>}/>
         <Route path='/signup' element={<SignupPage/>}/>
         <Route path="/login" element={<LoginPage/>}/>
+        <Route path="/myOrders" element={<Protected><OrdersByUser/></Protected>}/>
         <Route path='/logout' element={<Protected><Logout/></Protected>}/>
         <Route path='/addAddress' element={<Protected><AddAddress/></Protected>}/>
         <Route path='/updateAddress' element={<Protected><EditAddress/></Protected>}/>

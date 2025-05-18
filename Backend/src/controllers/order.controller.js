@@ -1,4 +1,5 @@
 import { Order } from "../models/order.model.js"; 
+import { User } from "../models/user.model.js"
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -11,7 +12,8 @@ import { CustomerSubscriptionPlan } from "../models/customerSubsriptionPlan.mode
 export const createOrder = asyncHandler(async (req, res) => {
     
         const { quantity } = req.body;
-        const { customerId , subscriptionId } = req.params;
+        const { customerId , subscriptionId } = req.body;
+
         console.log(quantity , customerId , subscriptionId)
         // Create a new order
         if([quantity , customerId , subscriptionId].some((field)=>field.trim()==='')){
@@ -60,6 +62,28 @@ export const createOrder = asyncHandler(async (req, res) => {
         .status(201)
         .json(new ApiResponse(200 ,  { newOrder , customerSubscription} , "Order created succssfully"));
     
+})
+
+export const getAllOrders = asyncHandler(async(req , res)=>{
+  //find the user 
+  //find in customerSubscriptionPlan if there is such user exists there and then find the details of the order placed
+
+    const user = await User.findById(req.user?._id);
+        if (!user) {
+            throw new ApiError(500, "User not found");
+    }
+
+    const orders = await Order.find({customer:req.user?._id})
+    .populate('plan')
+  
+
+    if(!orders){
+      throw new ApiError(400 , "Do not find any order")
+    }
+
+    return res
+    .status(201)
+    .json(new ApiResponse(200 , orders , "Found Orders Successfully"));  
 })
 
 

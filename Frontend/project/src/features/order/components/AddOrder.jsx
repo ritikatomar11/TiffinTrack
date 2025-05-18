@@ -32,7 +32,7 @@ export function AddOrder (){
         }
         console.log(id)
         console.log(user.data._id); 
-        dispatch(createOrderAsync({id: id , userId: user.data._id} ))
+        dispatch(createOrderAsync({id: id , userId: user.data._id , quantity:quantity} ))
     }
 
     return (

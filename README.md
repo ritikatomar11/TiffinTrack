@@ -50,3 +50,13 @@ Meanwhile, staff members can:
 - View tiffin items categorized by meal type and day
 - Subscribe to plans
 - Manage profile and address information
+
+
+📌 Future Enhancements
+- Admin analytics dashboard (sales, active plans, etc.)
+- SMS/email notification for delivery alerts
+- Payment gateway integration
+- Delivery staff management and tracking
+- Mobile-responsive PWA version
+
+

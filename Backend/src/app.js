@@ -12,7 +12,7 @@ const app = express()
 
 //for now i am allowing any origin to access my backend
 app.use(cors({
-    origin: "https://tiffin-track.vercel.app/", // Allow frontend URL
+    origin: "http://localhost:5173", // Allow frontend URL
     methods: "GET,POST,PUT,DELETE,PATCH",
     credentials: true, // Allow cookies if needed
   }));

@@ -34,7 +34,9 @@ export const logout = async()=>{
 
 export const checkAuth = async(cred)=>{
     try{
-        const res = await axiosInstance.get("auth/check-auth")
+        const res = await axiosInstance.get("auth/check-auth" , {
+            withCredentials: true // ensure cookies are sent
+    })
         console.log("res" , res)
         return res.data 
     }catch(error){

@@ -29,12 +29,12 @@ export const UserProfile = () => {
     }
   }, [loggedInUser, navigate]);
 
-  if (!userInfo?.data)
-    return (
-      <Typography align="center" sx={{ mt: 5, color: "gray" }}>
-        Loading user data...
-      </Typography>
-    );
+  // if (!userInfo?.data)
+  //   return (
+  //     <Typography align="center" sx={{ mt: 5, color: "gray" }}>
+  //       Loading user data...
+  //     </Typography>
+  //   );
 
   // useEffect(()=>{
   //   dispatch()

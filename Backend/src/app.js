@@ -49,6 +49,10 @@ app.get('/', (req, res) => {
   res.send({ message: 'API is running' });
 });
 
+app.get("/test-cookie", (req, res) => {
+  console.log("Incoming cookies:", req.cookies); // logs all cookies
+  res.json({ receivedCookies: req.cookies });
+});
 
 
 export { app }

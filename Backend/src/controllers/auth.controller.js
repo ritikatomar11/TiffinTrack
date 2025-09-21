@@ -109,7 +109,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: true
+        secure: process.env.NODE_ENV === 'production'
     }
 
 
@@ -164,10 +164,12 @@ const checkAuth = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(500, "User not found");
     }
-    const options = {
-        httpOnly: true,
-        secure: true
-    }
+   const options = {
+    httpOnly: true,                       
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'None',                      
+    };
+
     return res
         .status(200)
         .cookie("accessToken", accessToken, options)

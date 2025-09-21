@@ -11,8 +11,11 @@ const app = express()
 // then humein apne server se uss file ko delete krna hai - 2step process
 
 //for now i am allowing any origin to access my backend
+const allowedOrigins = process.env.NODE_ENV === "production" 
+  ? process.env.FRONTEND_URL
+  : ["http://localhost:5173"];
 app.use(cors({
-    origin: "http://localhost:5173", // Allow frontend URL
+    origin:allowedOrigins, // Allow frontend URL
     methods: "GET,POST,PUT,DELETE,PATCH",
     credentials: true, // Allow cookies if needed
   }));

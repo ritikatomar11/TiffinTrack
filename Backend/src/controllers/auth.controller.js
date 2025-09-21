@@ -67,9 +67,6 @@ const registerUser = asyncHandler(async (req, res) => {
         status(200)
         .json(new ApiResponse(200, createdUser, "User registered successfully"))
 
-
-
-
 });
 
 
@@ -167,9 +164,14 @@ const checkAuth = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(500, "User not found");
     }
-
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
     return res
         .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
         .json(
             new ApiResponse(200, user, "Authenticated")
         )

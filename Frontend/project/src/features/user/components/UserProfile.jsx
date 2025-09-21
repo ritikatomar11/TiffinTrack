@@ -51,7 +51,7 @@ export const UserProfile = () => {
     staffType,
     joiningDate,
     address,
-  } = userInfo.data;
+  } = loggedInUser.data;
 
   return (
      <Box maxWidth={600} mx="auto" mt={8}>

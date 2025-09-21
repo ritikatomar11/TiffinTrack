@@ -21,10 +21,10 @@ import { SubscriptionPlanPage } from "./pages/SubscriptionPlanPage";
 import { OrdersByUser } from "./features/order/components/OrdersByUser";
 function App() {
   
-  const isAuthChecked = useSelector(selectIsAuthChecked)
+  // const isAuthChecked = useSelector(selectIsAuthChecked)
   const loggedInUser = useSelector(selectLoggedInUser)
   console.log(loggedInUser)
-  useAuthCheck()
+  // useAuthCheck()
   useGetUserDetails(loggedInUser)
 
   const routes = createBrowserRouter(

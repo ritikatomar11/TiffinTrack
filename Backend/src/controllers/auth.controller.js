@@ -3,6 +3,7 @@ import { Staff } from "../models/staff.model.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
+import path from "path"
 
 //for registration 
 const registerUser = asyncHandler(async (req, res) => {
@@ -167,7 +168,8 @@ const checkAuth = asyncHandler(async (req, res) => {
    const options = {
     httpOnly: true,                       
     secure: process.env.NODE_ENV === 'production', 
-    sameSite: 'None',                      
+    sameSite: 'None', 
+    path: '/',                     
     };
 
     return res
